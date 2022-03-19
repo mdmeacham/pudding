@@ -241,26 +241,6 @@ def insert_test_data(conn, cur):
     for customer in customers:
         cur.execute(sql, (customer['name'],))
 
-    sql = """
-        INSERT INTO poc (
-        name,
-        customer_id,
-        stage_id,
-        se_id
-        ) VALUES (%s, %s, %s, %s)
-    """
-
-    pocs = [
-        {
-            "name": "WFH coders",
-            "customer_id": 1,
-            "stage_id": 1,
-            "se_id": 1
-        }
-    ]
-
-    for poc in pocs:
-        cur.execute(sql, (poc['name'], poc['customer_id'], poc['stage_id'], poc['se_id']))
 
     sql = """
         INSERT INTO vertical (
@@ -336,10 +316,61 @@ def insert_test_data(conn, cur):
     for product in products:
         cur.execute(sql, (product['name'],))
 
-    # Use Third Party
+    # Use Third Party # 1 is home coders 2 is WOW 3 is nurse stations
 
+    sql = """
+        INSERT INTO use_third_party (
+        use_id,
+        third_party_id
+        ) VALUES (%s, %s)
+    """
+    use_third_parties = [
+        {"use_id": 1, "third_party_id": 1},
+        {"use_id": 1, "third_party_id": 2},
+        {"use_id": 2, "third_party_id": 1},
+        {"use_id": 2, "third_party_id": 2},
+        {"use_id": 3, "third_party_id": 1},
+        {"use_id": 3, "third_party_id": 2},
+        {"use_id": 3, "third_party_id": 4}
+    ]
 
-    # POC Third Party
+    for use_third_party in use_third_parties:
+        cur.execute(sql, (use_third_party["use_id"], use_third_party["third_party_id"],))
+
+    sql = """
+        INSERT INTO poc (
+        name,
+        customer_id,
+        stage_id,
+        se_id
+        ) VALUES (%s, %s, %s, %s)
+    """
+
+    pocs = [
+        {
+            "name": "WFH coders",
+            "customer_id": 1,
+            "stage_id": 1,
+            "se_id": 1
+        }
+    ]
+
+    for poc in pocs:
+        cur.execute(sql, (poc['name'], poc['customer_id'], poc['stage_id'], poc['se_id']))
+
+    sql = """
+        INSERT INTO poc_third_party (
+        poc_id,
+        third_pary_id
+        ) VALUES (%s, %s)
+    """
+
+    poc_third_parties = [
+        {"poc_id": 1, "third_party_id": 1}
+    ]
+
+    for poc_third_party in poc_third_parties:
+        cur.execute(sql, (poc_third_party["poc_id"], poc_third_party["third_party_id"],))
 
 
     sql = """
