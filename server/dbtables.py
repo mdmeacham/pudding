@@ -92,8 +92,7 @@ def create_tables(conn, cur):
         CREATE TABLE use (
         id serial PRIMARY KEY,
         name text,
-        description text,
-        CONSTRAINT fk_poc FOREIGN KEY(poc_id) REFERENCES poc(id)
+        description text
         )
         """
     )
@@ -202,7 +201,16 @@ def insert_test_data(conn, cur):
     for stage in stages:
         cur.execute(sql, (stage['name'],))
 
-    # Insert into Team
+    sql = """
+        INSERT INTO team (
+            name
+        ) values (%s)
+    """
+
+    teams = ["NA Northwest", "NA Southwest"]
+
+    for team in teams:
+        cur.execute(sql, (team,))
 
     sql = """
         INSERT INTO se (
@@ -215,7 +223,7 @@ def insert_test_data(conn, cur):
         {"first_name": "Carl", "last_name": "Segan", "team_id": 2},
     ]
     for se in ses:
-        cur.execute(sql, (se['first_name'],se['last_name'], se['team']))
+        cur.execute(sql, (se['first_name'],se['last_name'], se['team_id'],))
 
     sql = """
         INSERT INTO role (role) VALUES (%s);
@@ -361,7 +369,7 @@ def insert_test_data(conn, cur):
     sql = """
         INSERT INTO poc_third_party (
         poc_id,
-        third_pary_id
+        third_party_id
         ) VALUES (%s, %s)
     """
 
