@@ -69,3 +69,14 @@ def fetch_filtered_customers(search_term: str):
 def fetch_contacts(customer_id: int):
     contacts = jsonable_encoder(db.fetch_contacts(customer_id))
     return JSONResponse(content=contacts)
+
+@app.post('/contacts')
+def post_new_contact(contact: Contact):
+    posted_contact = jsonable_encoder(db.post_new_contact(contact))
+    return JSONResponse(content=posted_contact)
+
+
+@app.get('/roles')
+def fetch_all_roles():
+    roles = jsonable_encoder(db.fetch_all_roles())
+    return JSONResponse(content=roles)

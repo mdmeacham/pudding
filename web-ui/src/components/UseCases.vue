@@ -72,7 +72,7 @@ export default {
       this.showUseCaseDialog = true;
     },
     onUseCaseDialogClosed(action, name, seats, description) {
-      if (action != 'cancel') {
+      if (action === 'save') {
         if (Object.keys(this.selectedUse).length === 0) {
           var newUse = {
             id: 0,

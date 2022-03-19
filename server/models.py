@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 class POC(BaseModel):
     id: int
@@ -7,12 +8,17 @@ class POC(BaseModel):
     stage_id: int
     se_id: int
 
-class Use(BaseModel):
-    id: int
-    name: str
-    description: str
-    seats: int
+class POCUse(BaseModel):
     poc_id: int
+    use_id: int
+    notes: str
+    seats: int
 
-def test_model(poc: POC):
-    print(poc)
+class Contact(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    title: str
+    customer_id: int
+    roles: List[int] = []
+

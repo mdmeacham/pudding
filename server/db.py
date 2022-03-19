@@ -109,7 +109,10 @@ def fetch_filtered_customers(search_term):
 
 def fetch_contacts(customer_id):
     sql = """
+    with t as
+    (
     SELECT
+    contact.id as id,
     contact.first_name , contact.last_name , contact.title , 
     concat_ws(' ', contact.first_name, contact.last_name) as full_name,
     role.role
@@ -118,8 +121,42 @@ def fetch_contacts(customer_id):
     left join role on contact_role.role_id = role.id
     where contact.customer_id = %s
     ORDER by contact.id
+    )
+    select id, full_name, last_name, first_name,
+    title, string_agg(role, ',') as roles
+    from t group by id, full_name, last_name, first_name, title
     """
     cur.execute(sql, (customer_id,))
+    return cur.fetchall()
+
+def post_new_contact(contact):
+    sql = """
+        INSERT INTO contact (
+        first_name,
+        last_name,
+        title,
+        customer_id
+        ) VALUES (%s, %s, %s, %s)
+        RETURNING *
+    """
+    cur.execute(sql, (contact.first_name, contact.last_name, contact.title, contact.customer_id,))
+    conn.commit()
+    new_contact = cur.fetchone()
+    for role in contact.roles:
+        sql = """
+            INSERT INTO contact_role (
+                contact_id,
+                role_id
+            ) VALUES (%s, %s)
+        """
+        cur.execute(sql, (new_contact["id"], role),)
+    conn.commit()
+    new_contact["roles"] = contact.roles
+    return new_contact
+
+def fetch_all_roles():
+    sql = "SELECT * from role"
+    cur.execute(sql)
     return cur.fetchall()
 
 if __name__ == "__main__":

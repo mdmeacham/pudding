@@ -1,0 +1,9 @@
+- Move use cases to not being something you create new for each POC. 
+    - Have set use cases in set industries
+    - Allow for notes on anything special about the use case as it's implemented in this customer
+    
+- Be able to note shortcomings of product in each use case so this can be reported on later
+
+- Have Typical 3rd party products that are used for each use case.
+    - be able to customize for this customer 
+        - for this, will need another many to many table for poc_use_third_party...   (I think)
