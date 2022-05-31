@@ -48,9 +48,21 @@ def create_tables(conn, cur):
 
     cur.execute(
         """
+        CREATE TABLE vertical (
+            id serial PRIMARY KEY,
+            name text
+        )
+        """
+    )
+
+    cur.execute(
+        """
         CREATE TABLE customer (
         id serial PRIMARY KEY,
-        name text)
+        name text,
+        vertical_id int,
+        CONSTRAINT fk_vertical FOREIGN KEY(vertical_id) REFERENCES vertical(id)
+        )
         """
     )
 
@@ -71,12 +83,10 @@ def create_tables(conn, cur):
 
     cur.execute(
         """
-        CREATE TABLE vertical (
-            id serial PRIMARY KEY,
-            name text
-        )
+        CREATE INDEX stage_idx ON poc (stage_id)
         """
     )
+
 
     cur.execute(
         """
@@ -192,8 +202,8 @@ def insert_test_data(conn, cur):
         name) VALUES (%s);
     """
     stages = [
-        {"name": "In Execution"},
         {"name": "In Preparation"},
+        {"name": "In Execution"},
         {"name": "On Hold"},
         {"name": "Completed"},
         {"name": "Canceled"},
@@ -239,18 +249,6 @@ def insert_test_data(conn, cur):
         cur.execute(sql, (role['role'],))
 
     sql = """
-        INSERT INTO customer (name) VALUES (%s);
-    """
-    customers = [
-        {"name": "Dark Ages Medical"},
-        {"name": "1 cent store"},
-        {"name": "Best of Rest Health"},
-    ]
-    for customer in customers:
-        cur.execute(sql, (customer['name'],))
-
-
-    sql = """
         INSERT INTO vertical (
         name    
         ) VALUES (%s)
@@ -267,6 +265,18 @@ def insert_test_data(conn, cur):
 
     for vertical in verticals:
         cur.execute(sql, (vertical,))
+
+
+    sql = """
+        INSERT INTO customer (name, vertical_id) VALUES (%s, %s);
+    """
+    customers = [
+        {"name": "Dark Ages Medical", "vertical_id": 1},
+        {"name": "1 cent store", "vertical_id": 2},
+        {"name": "Best of Rest Health", "vertical_id": 1},
+    ]
+    for customer in customers:
+        cur.execute(sql, (customer['name'], customer['vertical_id']))
 
     sql = """
         INSERT INTO use (
@@ -305,6 +315,9 @@ def insert_test_data(conn, cur):
         {"use_id": 2, "vertical_id": 1},
         {"use_id": 3, "vertical_id": 1},
     ]
+
+    for use_vertical in use_verticals:
+        cur.execute(sql, (use_vertical['use_id'], use_vertical['vertical_id'],))
 
     sql = """
         INSERT INTO third_party (

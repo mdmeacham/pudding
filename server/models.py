@@ -22,3 +22,7 @@ class Contact(BaseModel):
     customer_id: int
     roles: List[int] = []
 
+class Vertical(BaseModel):
+    id: int
+    name: str
+

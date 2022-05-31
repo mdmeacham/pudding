@@ -25,6 +25,34 @@ def fetch_pocs_for_stage(stage_id):
     cur.execute(sql, (stage_id,))
     return cur.fetchall()
 
+def fetch_stages():
+    sql = """
+        SELECT *
+        FROM stage
+        ORDER BY id
+    """
+    cur.execute(sql)
+    return cur.fetchall()
+
+
+def fetch_pocs():
+    sql = """
+        SELECT
+        poc.id,
+        poc.name,
+        stage_id,
+        se_id,
+        customer_id,
+        stage.name as stage_name,
+        customer.name as customer_name
+        FROM poc
+        LEFT JOIN stage ON stage.id = poc.stage_id
+        LEFT JOIN customer on customer.id = poc.customer_id
+    """
+    cur.execute(sql)
+    return cur.fetchall()
+
+
 def fetch_one_poc(poc_id):
     cur.execute("SELECT * from poc WHERE id = %s", (poc_id,))
     return cur.fetchone()
@@ -158,6 +186,33 @@ def fetch_all_roles():
     sql = "SELECT * from role"
     cur.execute(sql)
     return cur.fetchall()
+
+def fetch_all_verticals():
+    cur.execute("SELECT * FROM vertical ORDER by id")
+    return cur.fetchall()
+
+def post_new_vertical(vertical):
+    sql = """
+        INSERT INTO vertical (
+        name
+        ) VALUES (%s)
+        RETURNING *
+    """
+    cur.execute(sql, (vertical.name,))
+    conn.commit()
+    return cur.fetchone()
+
+def update_vertical(vertical):
+    sql = """
+    UPDATE vertical SET
+    name = %s
+    WHERE id = %s
+    RETURNING *
+    """
+    cur.execute(sql,(vertical.name, vertical.id,))
+    conn.commit()
+    return cur.fetchone()
+
 
 if __name__ == "__main__":
     create_tables(conn, cur)
