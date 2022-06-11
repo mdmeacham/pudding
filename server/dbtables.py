@@ -373,7 +373,14 @@ def insert_test_data(conn, cur):
             "customer_id": 1,
             "stage_id": 1,
             "se_id": 1
+        },
+        {
+            "name": "Point of sale in corp stores",
+            "customer_id": 2,
+            "stage_id": 1,
+            "se_id": 1
         }
+
     ]
 
     for poc in pocs:

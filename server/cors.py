@@ -6,6 +6,7 @@ def configure_cors(app):
         "http://localhost:8080",
         "http://localhost:8081",
         "http://localhost:3000",
+        "http://localhost:9000",
     ]
 
     app.add_middleware(

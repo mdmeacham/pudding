@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { usePOCStore } from '@/stores/pocs';
 import { useRouter } from 'vue-router';
 import CategoryList from '@/lib/CategoryList.vue';

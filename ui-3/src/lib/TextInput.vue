@@ -2,7 +2,6 @@
 defineProps({
   modelValue: String,
   label: String,
-  inputType: String,
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -13,12 +12,11 @@ const updateValue = (event) => {
 </script>
 
 <template>
-  <div class="input-container">
+  <div class="container">
     <input
       class="text-input"
       type="text"
       placeholder=" "
-      :value="modelValue"
       @input="updateValue"
     />
     <div class="label">{{ label }}</div>
@@ -26,8 +24,7 @@ const updateValue = (event) => {
 </template>
 
 <style scoped>
-.input-container {
-  display: block;
+.container {
   position: relative;
   height: 40px;
   padding: 24px 0 24px 0;
@@ -49,7 +46,6 @@ const updateValue = (event) => {
 }
 
 .text-input {
-  appearance: none;
   width: 100%;
   border: none;
   border-bottom: solid 1px grey;

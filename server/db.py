@@ -5,9 +5,9 @@ from psycopg.rows import dict_row
 from dbtables import create_tables, insert_test_data
 
 conn = psycopg.connect("dbname=pudding user=bproj password=bproj", row_factory=dict_row)
-cur = conn.cursor()
 
 def fetch_pocs_for_stage(stage_id):
+    cur = conn.cursor()
     sql = """
         SELECT
         poc.id,
@@ -26,16 +26,26 @@ def fetch_pocs_for_stage(stage_id):
     return cur.fetchall()
 
 def fetch_stages():
+    cur = conn.cursor()
     sql = """
         SELECT *
         FROM stage
         ORDER BY id
     """
-    cur.execute(sql)
-    return cur.fetchall()
+    try:
+        cur.execute(sql)
+    except psycopg.Error as e:
+        print(e.diag.severity, e.diag.message_primary)
+    try:
+        return cur.fetchall()
+    except psycopg.Error as e:
+        print(e.diag.severity, e.diag.message_primary)
+        return []
+
 
 
 def fetch_pocs():
+    cur = conn.cursor()
     sql = """
         SELECT
         poc.id,
@@ -54,10 +64,12 @@ def fetch_pocs():
 
 
 def fetch_one_poc(poc_id):
+    cur = conn.cursor()
     cur.execute("SELECT * from poc WHERE id = %s", (poc_id,))
     return cur.fetchone()
 
 def post_new_poc(poc):
+    cur = conn.cursor()
     sql = """
         INSERT INTO poc (
         name,
@@ -72,6 +84,7 @@ def post_new_poc(poc):
     return cur.fetchone()
 
 def update_poc(poc):
+    cur = conn.cursor()
     sql = """
     UPDATE poc SET
     name = %s,
@@ -84,6 +97,7 @@ def update_poc(poc):
     return cur.fetchone()
 
 def delete_poc(poc_id):
+    cur = conn.cursor()
     sql = """
     DELETE from poc
     WHERE id = %s
@@ -93,10 +107,12 @@ def delete_poc(poc_id):
     return {"result": "success"}
 
 def fetch_uses_for_poc(poc_id):
+    cur = conn.cursor()
     cur.execute("SELECT * from use WHERE poc_id = %s", (poc_id,))
     return cur.fetchall()
 
 def post_new_use(poc_id, use):
+    cur = conn.cursor()
     sql = """
         INSERT INTO use (
         name,
@@ -111,6 +127,7 @@ def post_new_use(poc_id, use):
     return cur.fetchone()
 
 def update_use(use):
+    cur = conn.cursor()
     sql = """
     UPDATE use SET
     name = %s,
@@ -124,18 +141,22 @@ def update_use(use):
     return cur.fetchone()
 
 def fetch_customers():
+    cur = conn.cursor()
     cur.execute("SELECT * FROM customer")
     return cur.fetchall()
 
 def fetch_one_customer(customer_id):
+    cur = conn.cursor()
     cur.execute("SELECT * FROM customer WHERE id = %s", (customer_id,))
     return cur.fetchone()
 
 def fetch_filtered_customers(search_term):
+    cur = conn.cursor()
     cur.execute("SELECT * FROM customer WHERE name LIKE %s", ('%'+search_term+'%',))
     return cur.fetchall()
 
 def fetch_contacts(customer_id):
+    cur = conn.cursor()
     sql = """
     with t as
     (
@@ -158,6 +179,7 @@ def fetch_contacts(customer_id):
     return cur.fetchall()
 
 def post_new_contact(contact):
+    cur = conn.cursor()
     sql = """
         INSERT INTO contact (
         first_name,
@@ -183,15 +205,18 @@ def post_new_contact(contact):
     return new_contact
 
 def fetch_all_roles():
+    cur = conn.cursor()
     sql = "SELECT * from role"
     cur.execute(sql)
     return cur.fetchall()
 
 def fetch_all_verticals():
+    cur = conn.cursor()
     cur.execute("SELECT * FROM vertical ORDER by id")
     return cur.fetchall()
 
 def post_new_vertical(vertical):
+    cur = conn.cursor()
     sql = """
         INSERT INTO vertical (
         name
@@ -203,6 +228,7 @@ def post_new_vertical(vertical):
     return cur.fetchone()
 
 def update_vertical(vertical):
+    cur = conn.cursor()
     sql = """
     UPDATE vertical SET
     name = %s
