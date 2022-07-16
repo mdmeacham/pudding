@@ -2,6 +2,7 @@
 import { watch, reactive, ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { usePOCStore } from "../stores/pocs";
+import PocSummary from "../components/PocSummary.vue";
 
 onMounted(async () => {
   // Check if following direct URL link to a POC
@@ -46,18 +47,35 @@ function initEditorPOC() {
     editorPOC[keys[i]] = store.selectedPOC[keys[i]];
   }
 }
+
+async function save() {
+  await store.savePOC(editorPOC);
+  const keys = Object.keys(editorPOC);
+  for (let i = 0; i < keys.length; i++) {
+    store.selectedPOC[keys[i]] = editorPOC[keys[i]];
+  }
+}
+
+function summaryUpdated(key, value) {
+  if (key === "customer_id") {
+    value = value.id;
+  }
+  console.log("in parent, key and value are", key, value);
+  editorPOC[key] = value;
+}
 </script>
 
 <template>
-  <q-page>
+  <q-page v-if="Object.keys(store.selectedPOC).length > 0">
     <q-toolbar class="text-primary">
       <q-btn
         :disabled="saveDisabled"
+        @click="save"
         flat
         round
         dense
         icon="save"
-        class="q-mr-xs"
+        class="q-mr-xs mm-smaller-font"
       />
     </q-toolbar>
 
@@ -77,7 +95,7 @@ function initEditorPOC() {
 
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="summary">
-        <q-input v-model="editorPOC.name" label="Name" />
+        <poc-summary @summaryUpdated="summaryUpdated"></poc-summary>
       </q-tab-panel>
 
       <q-tab-panel name="criteria">
@@ -92,3 +110,9 @@ function initEditorPOC() {
     </q-tab-panels>
   </q-page>
 </template>
+
+<style scoped>
+.mm-smaller-font {
+  font-size: 12px;
+}
+</style>

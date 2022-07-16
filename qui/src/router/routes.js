@@ -3,7 +3,7 @@ const routes = [
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("pages/IndexPage.vue") },
+      { path: "/pocs", component: () => import("pages/IndexPage.vue") },
       {
         path: "/pocs/:id",
         name: "poc",
@@ -12,6 +12,7 @@ const routes = [
           id: route.params.id;
         },
       },
+      { path: "", redirect: { path: "/pocs" } },
     ],
   },
 

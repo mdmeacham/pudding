@@ -29,8 +29,8 @@ function addPOC() {
     id: 0,
     name: "New POC",
     stage_id: 1,
-    se_id: 0,
-    customer_id: 0,
+    se_id: 1,
+    customer_id: 1,
   };
   store.addPOC(newPOC);
   store.selectPOC(newPOC);
@@ -39,8 +39,20 @@ function addPOC() {
 </script>
 
 <template>
-  <q-list>
-    <q-item-label header> POCs </q-item-label>
+  <div class="column q-pt-sm">
+    <div class="row no-wrap justify-between items-center q-px-md">
+      <div class="text-grey text-weight-medium">POCs</div>
+      <div>
+        <q-btn
+          @click="addPOC"
+          flat
+          round
+          dense
+          icon="add"
+          class="q-mr-xs text-primary"
+        />
+      </div>
+    </div>
     <CategoryList
       :items="store.pocsByStage"
       :selectedItem="store.selectedPOC"
@@ -51,5 +63,5 @@ function addPOC() {
       @select="selectPOC"
       @expand="onStageExpand"
     />
-  </q-list>
+  </div>
 </template>

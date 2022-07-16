@@ -30,8 +30,16 @@ export const usePOCStore = defineStore("pocs", {
         .find((stage) => stage.id === poc.stage_id)
         .pocs.push(poc);
     },
-    savePOC(poc) {
-      axios.post("http://localhost:8000/pocs", poc);
+    async savePOC(poc) {
+      let results = {};
+      console.log("in store before post", poc);
+      if (poc.id === 0) {
+        results = await axios.post("http://localhost:8000/pocs", poc);
+        poc.id = results.data.id;
+        console.log("in store after post", poc);
+      } else {
+        results = await axios.put("http://localhost:8000/pocs", poc);
+      }
     },
     async fetchPOCsForStage(stageID) {
       const results = await axios.get(
